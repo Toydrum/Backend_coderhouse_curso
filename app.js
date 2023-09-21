@@ -5,7 +5,7 @@ const app = express()
 
 app.get('/api/products', async(req,res)=>{
     try {
-        const products = await productsManager.getProducts()
+        const products = await productsManager.getProducts(req.query)
         if(!products.length){
             return res.status(200).json({message: "no products"})
         }
