@@ -50,8 +50,6 @@ class ProductsManager{
     }
 }
 
-async function test(){
-
-}
+//async function test(){}
 
 export const productsManager = new ProductsManager()

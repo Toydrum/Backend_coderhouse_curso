@@ -1,9 +1,9 @@
-import express from 'express';
-import { productsManager } from './ProductsManager.js';
+import { Router } from "express";
+import { productsManager } from "../ProductsManager.js";
+const router = Router();
 
-const app = express()
 
-app.get('/api/products', async(req,res)=>{
+router.get('/', async(req,res)=>{
     try {
         const products = await productsManager.getProducts(req.query)
         if(!products.length){
@@ -15,7 +15,7 @@ app.get('/api/products', async(req,res)=>{
     }
 })
 
-app.get('/api/products/:idProduct', async(req,res)=>{
+router.get('/:idProduct', async(req,res)=>{
     const {idProduct} = req.params
     try {
         const product = await productsManager.getProductById(+idProduct)
@@ -29,11 +29,4 @@ app.get('/api/products/:idProduct', async(req,res)=>{
     }
 })
 
-
-
-
-
-
-app.listen(8080,()=>{
-    console.log('Escuchando al puerto 8080')
-})
+export default router;
