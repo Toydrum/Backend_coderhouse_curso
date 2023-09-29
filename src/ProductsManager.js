@@ -1,13 +1,17 @@
 import fs from 'fs'
 
-const path = 'products.json'
 
 class ProductsManager{
+    file = 'products.json'
+    constructor(path = './') {
+        this.path = path;
+      }
+      
     async getProducts(queryObj){
         const {limit} = queryObj
         try{
-            if(fs.existsSync(path)){
-                const productsFile = await fs.promises.readFile(path, 'utf-8')
+            if(fs.existsSync(this.path + this.file)){
+                const productsFile = await fs.promises.readFile(this.path + this.file, 'utf-8')
                 const productsArray = JSON.parse(productsFile)
                 return limit ? productsArray.slice(0,limit) : productsArray
             }
@@ -34,6 +38,7 @@ class ProductsManager{
         try {
             const products = await this.getProducts({})
             let id
+            console.log(products)
             if(!products.length){
                 id = 1
             }
@@ -41,15 +46,27 @@ class ProductsManager{
                 id = products[products.length -1].id +1
             }
             const newProduct = {id,...obj}
+            console.log('Nuevo producto creado:', newProduct);
             products.push(newProduct)
-            await fs.promises.writeFile(path, JSON.stringify(products))
+            fs.writeFileSync(this.path + this.file, JSON.stringify(products))
+            if(!newProduct) throw new Error('no hay nuevo producto')
             return newProduct
+        } catch (error) {
+            return error
+        }
+    }
+
+    async deleteProduct(id){
+        try {
+            const products = await this.getProducts()
+            const newArrayProducts = products.filter(p=>p.id!==id)
+            await fs.promises.writeFile(this.path,JSON.stringify(newArrayProducts))
         } catch (error) {
             return error
         }
     }
 }
 
-//async function test(){}
 
-export const productsManager = new ProductsManager()
+
+export const productsManager = new ProductsManager('./data/')

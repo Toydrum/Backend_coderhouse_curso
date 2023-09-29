@@ -29,4 +29,13 @@ router.get('/:idProduct', async(req,res)=>{
     }
 })
 
+router.post('/', async(req,res)=>{
+    try {
+        const newProduct = await productsManager.createProduct(req.body)
+        if(!newProduct) throw new Error('no hay nuevo producto')
+        res.status(200).json({message: 'product created',product:newProduct })
+    } catch (error) {
+        res.status(500).json({message: error})
+    }
+})
 export default router;
