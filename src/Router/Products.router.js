@@ -30,6 +30,10 @@ router.get('/:idProduct', async(req,res)=>{
 })
 
 router.post('/', async(req,res)=>{
+    const {product, status} = req.body;
+    if(!product || !status){
+        return res.status(400).json({message: "some data missing"})
+    }
     try {
         const newProduct = await productsManager.createProduct(req.body)
         if(!newProduct) throw new Error('no hay nuevo producto')
