@@ -38,4 +38,8 @@ router.post('/', async(req,res)=>{
         res.status(500).json({message: error})
     }
 })
+
+router.put("/:idProduct", async (req, res) => {
+    res.json(await productsManager.getProductById(req.params.id, req.body));
+  });
 export default router;
