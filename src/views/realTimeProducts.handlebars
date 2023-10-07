@@ -1,14 +1,7 @@
-
-
 <h1>productos</h1>
 <form action="/api/products" method="post" id="form">
 Product <input type="text" name="product" id="product">
 <input type="submit" value="createProduct">
 </form>
-<ul>
-    <li>
-        {{products}}
-    </li>
-</ul>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/index.js"></script>
+<script src="/realTimeProducts.js"></script>

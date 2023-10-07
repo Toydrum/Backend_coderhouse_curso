@@ -4,6 +4,7 @@ import cartRouter from './Router/Cart.router.js';
 import viewsRouter from './Router/views.router.js';
 import { __dirname } from './utils.js';
 import { engine } from 'express-handlebars';
+import { Server } from 'socket.io';
 
 const app = express();
 
@@ -24,7 +25,33 @@ app.use('/api', viewsRouter)
 
 
 
-app.listen(8080,()=>{
+const httpServer = app.listen(8080,()=>{
     console.log('Escuchando al puerto 8080')
+});
+
+//Websocket
+const socketServer = new Server(httpServer);
+
+
+const products = [];
+    
+socketServer.on('connection',(socket)=>{
+    console.log(`cliente conectado ${socket.id}`);
+    socket.on(`disconnect`,()=>{
+        console.log(`cliente desconectado ${socket.id}`)
+    });
+
+    socket.on('message',(info)=>{
+        products.push(info);
+        console.log(products);
+        console.log(`product: ${info}`);
+        socketServer.emit(`secondEvent`, products);
+    })
+
+
+
+
+
+
 })
 
