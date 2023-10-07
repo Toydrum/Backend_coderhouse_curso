@@ -8,7 +8,7 @@ class ProductsManager{
       }
       
     async getProducts(queryObj){
-        const {limit} = queryObj
+        if (typeof queryObj !== 'undefined' && queryObj.limit){
         try{
             if(fs.existsSync(this.path + this.file)){
                 const productsFile = await fs.promises.readFile(this.path + this.file, 'utf-8')
@@ -22,6 +22,7 @@ class ProductsManager{
         catch(error){
             return error
         }
+    }
     }
 
     async getProductById(idProduct){

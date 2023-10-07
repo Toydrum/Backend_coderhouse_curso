@@ -1,4 +1,6 @@
 import fs from "fs";
+import {productsManager} from "./ProductsManager.js";
+
 
 class CartManager {
   file = "cart.json";
@@ -99,7 +101,7 @@ class CartManager {
         return cart.id === parseInt(id);
       });
       if (!cart) throw new Error("Cart not found");
-      let products = await productManager.getProducts();
+      let products = await productsManager.getProducts();
       if (!!products?.data) {
         cart.products = await Promise.all(
           cart.products.map(async (product) => {
@@ -132,7 +134,7 @@ class CartManager {
   async readFile() {
     try {
       let carts = this.carts;
-      carts = await fs.readFileSync(this.path + this.file, "utf-8");
+      carts =  fs.readFileSync(this.path + this.file, "utf-8");
       this.carts = !!carts ? JSON.parse(carts) : [];
       return {
         status: "success",
@@ -147,7 +149,7 @@ class CartManager {
   }
   async writeFile() {
     try {
-      await fs.writeFileSync(
+        fs.writeFileSync(
         this.path + this.file,
         JSON.stringify(this.carts),
         "utf-8"

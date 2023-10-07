@@ -2,36 +2,31 @@ import { Router } from "express";
 import cartManager from "../CartManager.js";
 //import express from "express";
 const router = Router();
-/* Create */
-router.post("/", async (req, res) => {
-    res.json(await cartManager.addCart(req.body));
-});
-router.post("/:id/product/:pid", async (req, res) => {
+
+router.get('/:cid', async(req,res)=>{
+  try {
+    const cart = await cartManager.getCartById(req.params.cid)
+    if(!cart.length){
+      console.log(cart)
+      return res.status(200).json({message: `cart found id:${cart.data.id}`})
+
+  }}
+  catch (error) {
+    res.status(500).json({message: error.message})
+  }
+})
+
+//post
+
+router.post('/', async(req,res)=>{
+  res.json(await cartManager.addCart(req.body));
+})
+
+
+router.post('/:cid/product/:pid', async(req,res)=>{
+  console.log('Solicitud recibida en la ruta /:cid/product/:pid');
   res.json(
     await cartManager.addProductToCart(req.params.cid, req.params.pid)
-  );
-});
-/* Read */
-router.get("/:id", async (req, res) => {
-  res.json(await cartManager.getCartById(req.params.cid));
-});
-/* Update */
-router.put("/:id", async (req, res) => {
-  res.json(await cartManager.updateCart(req.params.cid, req.body));
-});
-router.put("/:id/product/:pid", async (req, res) => {
-  res.json(
-    await cartManager.updateProductFromCart(
-      req.params.cid,
-      req.params.pid,
-      req.body
-    )
-  );
-});
-/* Delete */
-router.delete("/:id/product/:pid", async (req, res) => {
-  res.json(
-    await cartManager.deleteProductFromCart(req.params.cid, req.params.pid)
-  );
-});
+)})
+
 export default router;
