@@ -1,6 +1,5 @@
 import fs from "fs";
-import {productsManager} from "./ProductsManager.js";
-
+import { productsManager } from "./ProductsManager.js";
 
 class CartManager {
   file = "cart.json";
@@ -72,7 +71,9 @@ class CartManager {
       if (!!product) {
         product.quantity++;
       } else {
-        cart.products.push({ id: parseInt(pid), quantity: 1 });
+        let newProduct = await productsManager.getProductById(parseInt(pid));
+        if (!newProduct?.id) throw new Error("The product doesn't exist!");
+        cart.products.push({ id: newProduct.id, quantity: 1 });
       }
       let fileWritten = await this.writeFile();
       if (fileWritten?.status !== "success")
@@ -102,13 +103,10 @@ class CartManager {
       });
       if (!cart) throw new Error("Cart not found");
       let products = await productsManager.getProducts();
-      if (!!products?.data) {
+      if (!!products) {
         cart.products = await Promise.all(
           cart.products.map(async (product) => {
-            let productFound = await products.data?.find(
-              (p) => p.id === product.id
-            );
-            console.log(productFound);
+            let productFound = await products.find((p) => p.id === product.id);
             if (!!productFound) {
               product.product = productFound;
             }
@@ -134,7 +132,7 @@ class CartManager {
   async readFile() {
     try {
       let carts = this.carts;
-      carts =  fs.readFileSync(this.path + this.file, "utf-8");
+      carts = fs.readFileSync(this.path + this.file, "utf-8");
       this.carts = !!carts ? JSON.parse(carts) : [];
       return {
         status: "success",
@@ -149,7 +147,7 @@ class CartManager {
   }
   async writeFile() {
     try {
-        fs.writeFileSync(
+      fs.writeFileSync(
         this.path + this.file,
         JSON.stringify(this.carts),
         "utf-8"

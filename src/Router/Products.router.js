@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/', async(req,res)=>{
     try {
-        const products = await productsManager.getProducts(req.query)
+        const products = await productsManager.getProducts(req.query.limit)
         if(!products.length){
             return res.status(200).json({message: "no products"})
         }
@@ -16,9 +16,10 @@ router.get('/', async(req,res)=>{
 })
 
 router.get('/:idProduct', async(req,res)=>{
-    const {idProduct} = req.params
+    const idProduct = req.params.idProduct
     try {
         const product = await productsManager.getProductById(+idProduct)
+       
         if(!product){
             return res.status(400).json({message: 'product not found with the id'})
         }
