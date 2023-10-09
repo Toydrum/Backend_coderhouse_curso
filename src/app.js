@@ -23,7 +23,7 @@ app.use("/api/cart", cartRouter);
 app.use("/", viewsRouter);
 
 const httpServer = app.listen(8080, () => {
-  console.log("Escuchando al puerto 8080");
+	console.log("Escuchando al puerto 8080");
 });
 
 //Websocket
@@ -32,37 +32,37 @@ const socketServer = new Server(httpServer);
 const products = [];
 
 socketServer.on("connection", (socket) => {
-  console.log(`cliente conectado ${socket.id}`);
-  socket.on(`disconnect`, () => {
-    console.log(`cliente desconectado ${socket.id}`);
-  });
+	console.log(`cliente conectado ${socket.id}`);
+	socket.on(`disconnect`, () => {
+		console.log(`cliente desconectado ${socket.id}`);
+	});
 
-  socket.on("message", (info) => {
-    products.push(info);
-    console.log(products);
-    console.log(`product: ${info}`);
-    socketServer.emit(`secondEvent`, products);
-  });
+	socket.on("message", (info) => {
+		products.push(info);
+		console.log(products);
+		console.log(`product: ${info}`);
+		socketServer.emit(`secondEvent`, products);
+	});
 
-  socket.on("getProducts", async (limit) => {
-    try {
-      let products = await fetch(
-        `http://localhost:8080/api/products/${!!limit ? `?limit=${limit}` : ""}`
-      );
-      if (products.status !== 200) throw new Error("Petition error.");
-      products = await products.json();
-      console.log(products);
-      if (!products?.products) throw new Error("There is no products.");
-      socket.emit("productsLoaded", {
-        message: products.message,
-        products: products.products,
-      });
-    } catch (error) {
-      socket.emit("errorGetProducts", {
-        error: error,
-        errorMessage: error.message,
-        errorCause: error.cause,
-      });
-    }
-  });
+	socket.on("getProducts", async (limit) => {
+		try {
+			let products = await fetch(
+				`http://localhost:8080/api/products/${!!limit ? `?limit=${limit}` : ""}`
+			);
+			if (products.status !== 200) throw new Error("Petition error.");
+			products = await products.json();
+			console.log(products);
+			if (!products?.products) throw new Error("There is no products.");
+			socket.emit("productsLoaded", {
+				message: products.message,
+				products: products.products,
+			});
+		} catch (error) {
+			socket.emit("errorGetProducts", {
+				error: error,
+				errorMessage: error.message,
+				errorCause: error.cause,
+			});
+		}
+	});
 });
