@@ -2,15 +2,23 @@ import express from "express";
 import productsRouter from "./Router/Products.router.js";
 import cartRouter from "./Router/Cart.router.js";
 import viewsRouter from "./Router/views.router.js";
+import costumersRouter from "./Router/costumers.router.js"
 import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
+
+
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
+//Mongodb Atlas
+mongoose.connect("mongodb+srv://CoderHouse:CoderHouse@cluster0.vbr08oz.mongodb.net/Ecommerce?retryWrites=true&w=majority")
+.then(()=> console.log('conectado a la base de datos'))
+.catch((error)=> console.log(error))
 
 //handlebars
 app.engine("handlebars", engine());
@@ -21,10 +29,12 @@ app.set("views", __dirname + "/views");
 app.use("/api/products", productsRouter);
 app.use("/api/cart", cartRouter);
 app.use("/", viewsRouter);
+app.use("/api/costumers", costumersRouter);
 
 const httpServer = app.listen(8080, () => {
 	console.log("Escuchando al puerto 8080");
 });
+
 
 //Websocket
 const socketServer = new Server(httpServer);
