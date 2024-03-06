@@ -1,16 +1,19 @@
-import { Schema, Model } from "mongoose";
+import {Schema, model} from "mongoose";
 
 //esquema
 const productsSchema = new Schema({
-	name: {
+	title: {
 		type: String,
 		required: true,
 	},
 	description: {
 		type: String,
 	},
+	img: {
+		type: String,
+	},
 	code: {
-		type: Number,
+		type: String,
 		required: true,
 		unique: true,
 	},
@@ -23,5 +26,17 @@ const productsSchema = new Schema({
 	},
 	category: {
 		type: String,
+		required: true,
+	},
+	status: {
+		type: Boolean,
+		required: true,
+	},
+	thumbnails: {
+		type: [String],
 	},
 });
+
+const ProductModel = model("products", productsSchema);
+
+export default ProductModel;
