@@ -1,0 +1,34 @@
+
+
+<form id="search-form">
+  <label for="type">Tipo de búsqueda</label>
+  <select name="type" id="search-type">
+    <option value="category" selected="selected">Categoría</option>
+    <option value="disponibility">Disponibilidad</option>
+  </select>
+  <br />
+  <label id="query-label" for="query">Búsqueda</label>
+  <input id="search-query" type="text" name="query" />
+  <br />
+  <label for="sort">Ordenamiento:</label>
+  <select name="sort" id="search-sort">
+    <option value="">Select</option>
+    <option value="asc">Ascendente</option>
+    <option value="desc">Descendente</option>
+  </select>
+  <br />
+  <label for="limit">Límite</label>
+  <input type="number" name="limit" id="limit" />
+  <br />
+  <button
+    id="submitFilter"
+    class="d-block mx-auto my-3 w-50 btn btn-dark"
+    type="submit"
+  >Buscar</button>
+</form>
+
+
+<div id="products"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="./products.js"></script>

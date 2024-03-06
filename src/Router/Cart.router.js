@@ -106,7 +106,7 @@ router.delete("/:cid", async (req, res)=>{
 }
 });
 
-router.delete("/:cid/products/:pid", async (req, res)=>{
+router.delete("/:cid/product/:pid", async (req, res)=>{
   try {
     const cartId = req.params.cid;
     const productId = req.params.pid;

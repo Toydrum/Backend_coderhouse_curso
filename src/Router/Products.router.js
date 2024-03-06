@@ -5,7 +5,7 @@ const router = Router();
 router.get("/", async (req, res) => {
 	try {
 			const { limit = 10, page = 1, sort, query } = req.query;
-
+			console.log(limit, page, sort, query)
 			const productos = await ProductManager.getProducts({
 					limit: parseInt(limit),
 					page: parseInt(page),
@@ -22,8 +22,8 @@ router.get("/", async (req, res) => {
 					page: productos.page,
 					hasPrevPage: productos.hasPrevPage,
 					hasNextPage: productos.hasNextPage,
-					prevLink: productos.hasPrevPage ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
-					nextLink: productos.hasNextPage ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
+					prevLink: productos.hasPrevPage ? `/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
+					nextLink: productos.hasNextPage ? `/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
 			});
 
 	} catch (error) {

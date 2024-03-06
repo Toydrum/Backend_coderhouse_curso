@@ -42,7 +42,7 @@ class ProductManager {
 
 				let queryOptions = {};
 
-				if (query) {
+				if (!!query&& query != "undefined") {
 						queryOptions = { category: query };
 				}
 
