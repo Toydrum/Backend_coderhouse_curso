@@ -1,33 +1,59 @@
 import express from "express";
+import session from "express-session";
+import { engine } from "express-handlebars";
+//Routers
 import productsRouter from "./Router/Products.router.js";
 import cartRouter from "./Router/Cart.router.js";
 import viewsRouter from "./Router/views.router.js";
 import costumersRouter from "./Router/costumers.router.js";
-import { __dirname } from "./utils.js";
-import { engine } from "express-handlebars";
+import sessionsRouter from "./Router/sessions.router.js";
+import userRouter from "./Router/user.router.js";
+
+import { __dirname } from "./utils/utils.js";
 import { Server } from "socket.io";
 import database from "./database.js";
+import MongoStore from "connect-mongo";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
-//Mongodb Atlas
-/* mongoose.connect("mongodb+srv://CoderHouse:CoderHouse@cluster0.vbr08oz.mongodb.net/Ecommerce?retryWrites=true&w=majority")
-.then(()=> console.log('conectado a la base de datos'))
-.catch((error)=> console.log(error)) */
-const db = database;
+app.use(express.static( "src/public"));
+app.use(
+	session({
+		secret: "secretCoder",
+		resave: true,
+		saveUninitialized: true,
+		store: MongoStore.create({
+			mongoUrl:
+				"mongodb+srv://CoderHouse:CoderHouse@cluster0.vbr08oz.mongodb.net/Ecommerce?retryWrites=true&w=majority",
+			ttl: 100,
+		}),
+	})
+);
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 //handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", __dirname + "/views");
+app.set("views", "./src/views");
 
 //routes
 app.use("/api/products", productsRouter);
 app.use("/api/cart", cartRouter);
 app.use("/", viewsRouter);
 app.use("/api/costumers", costumersRouter);
+app.use("/api/sessions", sessionsRouter);
+app.use("/api/users", userRouter);
+
+
+
 
 const httpServer = app.listen(8080, () => {
 	console.log("Escuchando al puerto 8080");

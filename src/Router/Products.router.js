@@ -5,14 +5,14 @@ const router = Router();
 router.get("/", async (req, res) => {
 	try {
 			const { limit = 10, page = 1, sort, query } = req.query;
-			console.log(limit, page, sort, query)
 			const productos = await ProductManager.getProducts({
-					limit: parseInt(limit),
-					page: parseInt(page),
-					sort,
-					query,
+				limit: parseInt(limit),
+				page: parseInt(page),
+				sort,
+				query,
 			});
-
+			
+			console.log(productos)
 			res.json({
 					status: 'success',
 					payload: productos,
