@@ -22,7 +22,7 @@ router.post(
 	
 			req.session.login = true;
 	
-			res.redirect("/profile");
+			res.redirect("/products");
 			
 		} catch (error) {
 			console.log(error)
