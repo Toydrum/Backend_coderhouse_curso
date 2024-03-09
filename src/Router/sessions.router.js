@@ -31,7 +31,7 @@ router.post(
 );
 
 router.get("/faillogin", async (req, res) => {
-	res.send({ error: "Fallo todoooooo el login" });
+	res.send({ error: "Fallo login" });
 });
 
 router.get("/logout", (req, res) => {
